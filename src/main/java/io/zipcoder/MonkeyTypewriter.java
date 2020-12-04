@@ -1,5 +1,7 @@
 package io.zipcoder;
 
+import com.sun.xml.internal.xsom.visitor.XSContentTypeFunction;
+
 public class MonkeyTypewriter {
     public static void main(String[] args) {
         String introduction = "It was the best of times,\n" +
@@ -24,6 +26,18 @@ public class MonkeyTypewriter {
         // For each Copier(one safe and one unsafe), create and start 5 monkeys copying the introduction to
         // A Tale Of Two Cities.
 
+        SafeCopier safeCopier = new SafeCopier(introduction);
+        UnsafeCopier unsafeCopier = new UnsafeCopier(introduction);
+
+        Thread[] scArray = new Thread[5];
+        for (int i = 0; i<5; i++){
+            scArray[i] = new Thread(safeCopier);
+        }
+
+        Thread[] uscArray = new Thread[5];
+        for (int i = 0; i<5; i++){
+            uscArray[i] = new Thread(unsafeCopier);
+        }
 
         // This wait is here because main is still a thread and we want the main method to print the finished copies
         // after enough time has passed.
@@ -34,5 +48,10 @@ public class MonkeyTypewriter {
         }
 
         // Print out the copied versions here.
+        for (int i = 0; i<5; i++){
+            scArray[i].start();
+            uscArray[i].start();
+        }
+
     }
 }
